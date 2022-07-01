@@ -12,8 +12,8 @@ extension RemoteJson on RemoteConfigValue {
   }
 }
 
-class FireRemoteConfig {
-  FireRemoteConfig._();
+class FirebaseRemoteHelper {
+  FirebaseRemoteHelper._();
 
   static Future<void> initial({
     Duration fetchTimeout = const Duration(minutes: 1),
