@@ -14,7 +14,7 @@ extension RemoteJson on RemoteConfigValue {
 }
 
 class FirebaseRemoteHelper {
-  final instance = FirebaseRemoteHelper._();
+  static final instance = FirebaseRemoteHelper._();
 
   FirebaseRemoteHelper._();
 
