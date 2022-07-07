@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -13,9 +14,15 @@ extension RemoteJson on RemoteConfigValue {
 }
 
 class FirebaseRemoteHelper {
+  final instance = FirebaseRemoteHelper._();
+
   FirebaseRemoteHelper._();
 
-  static Future<void> initial({
+  final _ensureInitializedCompleter = Completer<bool>();
+
+  Future<bool> get ensureInitialized => _ensureInitializedCompleter.future;
+
+  Future<void> initial({
     Duration fetchTimeout = const Duration(minutes: 1),
     Duration minimumFetchInterval = const Duration(minutes: 60),
     Map<String, dynamic>? defaultParameters,
@@ -35,27 +42,29 @@ class FirebaseRemoteHelper {
     }
 
     await remoteConfig.fetchAndActivate();
+
+    _ensureInitializedCompleter.complete(true);
   }
 
   /// Get value as RemoteConfigValue
-  static RemoteConfigValue get(String key) {
+  RemoteConfigValue get(String key) {
     return FirebaseRemoteConfig.instance.getValue(key);
   }
 
   /// Get value as int
-  static int getInt(String key) => get(key).asInt();
+  int getInt(String key) => get(key).asInt();
 
   /// Get value as bool
-  static bool getBoolean(String key) => get(key).asBool();
+  bool getBoolean(String key) => get(key).asBool();
 
   /// Get value as String
-  static String getString(String key) => get(key).asString();
+  String getString(String key) => get(key).asString();
 
   /// Get value as double
-  static double getDouble(String key) => get(key).asDouble();
+  double getDouble(String key) => get(key).asDouble();
 
   /// Get value as Map
   ///
   /// T is bool, number, string
-  static Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
+  Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
 }
