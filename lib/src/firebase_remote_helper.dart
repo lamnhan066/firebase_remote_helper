@@ -20,8 +20,13 @@ class FirebaseRemoteHelper {
 
   final _ensureInitializedCompleter = Completer<bool>();
 
+  /// Return when the plugin is initialized
+  ///
+  /// Returns a [bool] that is true if the config parameters were activated.
+  /// Returns a [bool] that is false if the config parameters were already activated.
   Future<bool> get ensureInitialized => _ensureInitializedCompleter.future;
 
+  /// Initialize the plugin
   Future<void> initial({
     Duration fetchTimeout = const Duration(minutes: 1),
     Duration minimumFetchInterval = const Duration(minutes: 60),
@@ -41,9 +46,9 @@ class FirebaseRemoteHelper {
       await remoteConfig.setDefaults(defaultParameters);
     }
 
-    await remoteConfig.fetchAndActivate();
+    final isActivated = await remoteConfig.fetchAndActivate();
 
-    _ensureInitializedCompleter.complete(true);
+    _ensureInitializedCompleter.complete(isActivated);
   }
 
   /// Get value as RemoteConfigValue
@@ -65,6 +70,6 @@ class FirebaseRemoteHelper {
 
   /// Get value as Map
   ///
-  /// T is bool, number, string
+  /// Result: Map<String, T> with T is bool, number, string
   Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
 }
