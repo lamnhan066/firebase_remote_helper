@@ -1,14 +1,21 @@
 name: firebase_remote_helper
-description: A new Flutter plugin project.
+description: This plugin will help you easier to use firebase remote config.
 version: 0.0.1
-homepage:
+homepage: https://github.com/vursin/firebase_remote_helper
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=2.5.0"
 
 dependencies:
-  firebase_remote_config: ^2.0.10
+  firebase_remote_config: ^2.0.13
+  flutter:
+    sdk: flutter
+
 
 dev_dependencies:
-  test: ^1.21.3
-  lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:

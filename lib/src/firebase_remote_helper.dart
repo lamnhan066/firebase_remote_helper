@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
-extension RemoteJson on RemoteConfigValue {
+extension RemoteMap on RemoteConfigValue {
   Map<String, T> asMap<T>() {
     final json = jsonDecode(asString());
 

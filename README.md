@@ -23,7 +23,8 @@ remoteHelper.initial(
 await remoteHelper.ensureInitialized;
 
 // Get value 
-remoteHelper.get('key'); // ,asBool, .asInt, .asDouble, .asString, .asMap
+remoteHelper.get('key'); // .asBool, .asInt, .asDouble, .asString, .asMap
+
 remoteHelper.getInt('key');
 remoteHelper.getBool('key');
 remoteHelper.getDouble('key');
