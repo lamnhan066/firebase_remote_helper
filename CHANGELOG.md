@@ -1,4 +1,4 @@
-## 0.0.1+1
+## 0.0.1+2
 
 * Move from package > plugin
 * Improve README
