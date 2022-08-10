@@ -33,11 +33,12 @@ await remoteHelper.ensureInitialized;
 Get value
 
 ``` dart
-remoteHelper.get('key'); // .asBool, .asInt, .asDouble, .asString, .asMap
+remoteHelper.get('key'); // .asBool, .asInt, .asDouble, .asString, .asMap, .asList
 
 remoteHelper.getInt('key');
 remoteHelper.getBool('key');
 remoteHelper.getDouble('key');
 remoteHelper.getString('key');
 remoteHelper.getMap('key');
+remoteHelper.getList('key');
 ```

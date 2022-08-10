@@ -11,6 +11,14 @@ extension RemoteMap on RemoteConfigValue {
 
     return {};
   }
+
+  List<T> asList<T>() {
+    final json = jsonDecode(asString());
+
+    if (json != null) return json as List<T>;
+
+    return [];
+  }
 }
 
 class FirebaseRemoteHelper {
@@ -72,4 +80,9 @@ class FirebaseRemoteHelper {
   ///
   /// Result: Map<String, T> with T is bool, number, string
   Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
+
+  /// Get value as List
+  ///
+  /// List<T> with T is bool, number, string
+  List<T> getList<T>(String key) => get(key).asList<T>();
 }
