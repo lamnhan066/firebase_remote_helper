@@ -1,3 +1,10 @@
+## 0.0.1+4
+
+* [BREAKING CHANGE] Change from `getBoolean` to `getBool`.
+* Improves README
+* Prevent initialize this plugin again
+* Update dependencies
+
 ## 0.0.1+3
 
 * Supports type List.

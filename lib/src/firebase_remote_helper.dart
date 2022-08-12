@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 extension RemoteMap on RemoteConfigValue {
+  /// Get value as Map
+  ///
+  /// Result: Map<String, T> with T is bool, number, string
   Map<String, T> asMap<T>() {
     final json = jsonDecode(asString());
 
@@ -12,6 +15,9 @@ extension RemoteMap on RemoteConfigValue {
     return {};
   }
 
+  /// Get value as List
+  ///
+  /// List<T> with T is bool, number, string
   List<T> asList<T>() {
     final json = jsonDecode(asString());
 
@@ -40,6 +46,9 @@ class FirebaseRemoteHelper {
     Duration minimumFetchInterval = const Duration(minutes: 60),
     Map<String, dynamic>? defaultParameters,
   }) async {
+    // Prevent initialize this plugin again
+    if (_ensureInitializedCompleter.isCompleted) return;
+
     await FirebaseRemoteConfig.instance.ensureInitialized();
 
     final remoteConfig = FirebaseRemoteConfig.instance;
@@ -68,7 +77,7 @@ class FirebaseRemoteHelper {
   int getInt(String key) => get(key).asInt();
 
   /// Get value as bool
-  bool getBoolean(String key) => get(key).asBool();
+  bool getBool(String key) => get(key).asBool();
 
   /// Get value as String
   String getString(String key) => get(key).asString();

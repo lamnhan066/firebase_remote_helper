@@ -33,12 +33,24 @@ await remoteHelper.ensureInitialized;
 Get value
 
 ``` dart
+/// Return RemoteConfigValue
 remoteHelper.get('key'); // .asBool, .asInt, .asDouble, .asString, .asMap, .asList
 
+/// Number: 1
 remoteHelper.getInt('key');
+
+/// Boolean: true/false
 remoteHelper.getBool('key');
+
+/// Number: 1.0
 remoteHelper.getDouble('key');
+
+/// String: "something"
 remoteHelper.getString('key');
+
+/// JSON: ["something", "something other"]
 remoteHelper.getMap('key');
+
+/// JSON: {"someKey":"someValue", "someKey other":"someValue other"}
 remoteHelper.getList('key');
 ```
