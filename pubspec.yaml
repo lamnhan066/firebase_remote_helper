@@ -1,5 +1,5 @@
 name: firebase_remote_helper
-description: This plugin will help you easier to use firebase remote config.
+description: This plugin makes it easier for you to use firebase remote config.
 version: 0.0.1+4
 homepage: https://github.com/vursin/firebase_remote_helper
 

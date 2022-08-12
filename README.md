@@ -1,5 +1,7 @@
 # Firebase Remote Helper
 
+This plugin makes it easier for you to use firebase remote config.
+
 ## Usage
 
 Await for the initialization
