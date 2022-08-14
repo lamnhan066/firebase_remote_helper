@@ -10,7 +10,14 @@ extension RemoteMap on RemoteConfigValue {
   Map<String, T> asMap<T>() {
     final json = jsonDecode(asString());
 
-    if (json != null) return Map<String, T>.from(json);
+    FirebaseRemoteHelper._printDebug('asMap json: $json');
+
+    try {
+      if (json != null) return Map<String, T>.from(json);
+    } catch (e) {
+      FirebaseRemoteHelper._printDebug('asMap ERROR: $e');
+      rethrow;
+    }
 
     return {};
   }
@@ -20,8 +27,14 @@ extension RemoteMap on RemoteConfigValue {
   /// List<T> with T is bool, number, string
   List<T> asList<T>() {
     final json = jsonDecode(asString());
+    FirebaseRemoteHelper._printDebug('asList json: $json');
 
-    if (json != null) return List<T>.from(json);
+    try {
+      if (json != null) return List<T>.from(json);
+    } catch (e) {
+      FirebaseRemoteHelper._printDebug('asList ERROR: $e');
+      rethrow;
+    }
 
     return [];
   }
@@ -29,6 +42,8 @@ extension RemoteMap on RemoteConfigValue {
 
 class FirebaseRemoteHelper {
   static final instance = FirebaseRemoteHelper._();
+
+  static bool _debugLog = false;
 
   FirebaseRemoteHelper._();
 
@@ -45,7 +60,10 @@ class FirebaseRemoteHelper {
     Duration fetchTimeout = const Duration(minutes: 1),
     Duration minimumFetchInterval = const Duration(minutes: 60),
     Map<String, dynamic>? defaultParameters,
+    bool debugLog = false,
   }) async {
+    _debugLog = debugLog;
+
     // Prevent initialize this plugin again
     if (_ensureInitializedCompleter.isCompleted) return;
 
@@ -61,11 +79,15 @@ class FirebaseRemoteHelper {
 
     if (defaultParameters != null) {
       await remoteConfig.setDefaults(defaultParameters);
+
+      FirebaseRemoteHelper._printDebug(
+          'Set default values: $defaultParameters');
     }
 
     final isActivated = await remoteConfig.fetchAndActivate();
 
     _ensureInitializedCompleter.complete(isActivated);
+    _printDebug('Initialized');
   }
 
   /// Get value as RemoteConfigValue
@@ -94,4 +116,9 @@ class FirebaseRemoteHelper {
   ///
   /// List<T> with T is bool, number, string
   List<T> getList<T>(String key) => get(key).asList<T>();
+
+  static void _printDebug(Object? object) {
+    // ignore: avoid_print
+    if (_debugLog) print('[FirebaseRemoteHelper] $object');
+  }
 }
