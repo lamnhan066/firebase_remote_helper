@@ -10,7 +10,7 @@ extension RemoteMap on RemoteConfigValue {
   Map<String, T> asMap<T>() {
     final json = jsonDecode(asString());
 
-    if (json != null) return json as Map<String, T>;
+    if (json != null) return Map<String, T>.from(json);
 
     return {};
   }
@@ -21,7 +21,7 @@ extension RemoteMap on RemoteConfigValue {
   List<T> asList<T>() {
     final json = jsonDecode(asString());
 
-    if (json != null) return json as List<T>;
+    if (json != null) return List<T>.from(json);
 
     return [];
   }

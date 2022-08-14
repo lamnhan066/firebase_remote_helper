@@ -1,3 +1,7 @@
+## 0.0.1+5
+
+* Improved Map and List typecast.
+
 ## 0.0.1+4
 
 * [BREAKING CHANGE] Change from `getBoolean` to `getBool`.
