@@ -62,32 +62,36 @@ class FirebaseRemoteHelper {
     Map<String, dynamic>? defaultParameters,
     bool debugLog = false,
   }) async {
-    _debugLog = debugLog;
+    try {
+      _debugLog = debugLog;
 
-    // Prevent initialize this plugin again
-    if (_ensureInitializedCompleter.isCompleted) return;
+      // Prevent initialize this plugin again
+      if (_ensureInitializedCompleter.isCompleted) return;
 
-    await FirebaseRemoteConfig.instance.ensureInitialized();
+      await FirebaseRemoteConfig.instance.ensureInitialized();
 
-    final remoteConfig = FirebaseRemoteConfig.instance;
+      final remoteConfig = FirebaseRemoteConfig.instance;
 
-    await remoteConfig.setConfigSettings(
-      RemoteConfigSettings(
-          fetchTimeout: fetchTimeout,
-          minimumFetchInterval: minimumFetchInterval),
-    );
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+            fetchTimeout: fetchTimeout,
+            minimumFetchInterval: minimumFetchInterval),
+      );
 
-    if (defaultParameters != null) {
-      await remoteConfig.setDefaults(defaultParameters);
+      if (defaultParameters != null) {
+        await remoteConfig.setDefaults(defaultParameters);
 
-      FirebaseRemoteHelper._printDebug(
-          'Set default values: $defaultParameters');
+        _printDebug('Set default values: $defaultParameters');
+      }
+
+      final isActivated = await remoteConfig.fetchAndActivate();
+
+      _ensureInitializedCompleter.complete(isActivated);
+      _printDebug('Initialized');
+    } catch (e) {
+      _printDebug(
+          '! Cannot connect to the firebase config server with error: $e');
     }
-
-    final isActivated = await remoteConfig.fetchAndActivate();
-
-    _ensureInitializedCompleter.complete(isActivated);
-    _printDebug('Initialized');
   }
 
   /// Get value as RemoteConfigValue
