@@ -4,7 +4,7 @@ This plugin makes it easier for you to use firebase remote config.
 
 ## Usage
 
-Await for the initialization
+Await for the initialization:
 
 ``` dart
 // Get the instance
@@ -32,27 +32,38 @@ remoteHelper.initial(
 await remoteHelper.ensureInitialized;
 ```
 
-Get value
+Get value as specific `type`:
+
+``` dart
+/// Number: 
+/// Example value on firebase: 1
+remoteHelper.getInt('key');
+
+/// Boolean:
+/// Example value on firebase: true/false
+remoteHelper.getBool('key');
+
+/// Number:
+/// Example value on firebase: 1.0
+remoteHelper.getDouble('key');
+
+/// String: 
+/// Example value on firebase: "something"
+remoteHelper.getString('key');
+
+/// JSON as List: 
+/// Example value on firebase: ["something", "something other"]
+remoteHelper.getList('key');
+
+/// JSON as Map:
+/// Example value on firebase: {"someKey":"someValue", "someKey other":"someValue other"}
+remoteHelper.getMap('key');
+```
+
+Get value as `RemoteConfigValue`:
 
 ``` dart
 /// Return RemoteConfigValue
-remoteHelper.get('key'); // .asBool, .asInt, .asDouble, .asString, .asMap, .asList
-
-/// Number: 1
-remoteHelper.getInt('key');
-
-/// Boolean: true/false
-remoteHelper.getBool('key');
-
-/// Number: 1.0
-remoteHelper.getDouble('key');
-
-/// String: "something"
-remoteHelper.getString('key');
-
-/// JSON: ["something", "something other"]
-remoteHelper.getMap('key');
-
-/// JSON: {"someKey":"someValue", "someKey other":"someValue other"}
-remoteHelper.getList('key');
+/// Then you can use .asBool, .asInt, .asDouble, .asString, .asMap, .asList
+remoteHelper.get('key'); 
 ```

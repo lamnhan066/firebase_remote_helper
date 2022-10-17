@@ -1,3 +1,8 @@
+## 0.0.1+7
+
+* Improved README.
+* Update dependencies.
+
 ## 0.0.1+6
 
 * Add try catch to allow the `initial` method runs without internet connected.
