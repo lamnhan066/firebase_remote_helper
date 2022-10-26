@@ -1,3 +1,7 @@
+## 0.1.0
+
+* Upgrade dependencies.
+
 ## 0.0.1+7
 
 * Improved README.
