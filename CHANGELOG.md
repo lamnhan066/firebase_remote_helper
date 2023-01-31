@@ -1,3 +1,9 @@
+## 0.1.1
+
+* Automatically using `jsonEncode` to encode `Map<String, Object>` and `List<Object>`.
+* Add `onError` parameter to `.asMap` and `.asList` extensions to set the value if error occurs instead of throw exception.
+* Add more tests.
+
 ## 0.1.0
 
 * Upgrade dependencies.

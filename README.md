@@ -14,7 +14,17 @@ final remoteHelper = FirebaseRemoteHelper.instance;
 await remoteHelper.initial(
     fetchTimeout: const Duration(minutes: 1), // Optinal: default is 1 minute
     minimumFetchInterval: const Duration(minutes: 60), // Optinal: default is 60 minutes
-    defaultParameters: {}, // Optinal: default is not set
+    defaultParameters: {
+        'bool': true,
+        'int': 5,
+        'String': 'This is string',
+        'mapInt': {'a': 1, 'b': 2},
+        'mapString': {'a': 'a', 'b': 'b'},
+        'mapBool': {'a': true, 'b': false},
+        'listInt': [1, 2, 3],
+        'listString': ['a', 'b', 'c'],
+        'listBool': [true, false, true],
+    }, // Optinal: default is not set
 );
 ```
 
@@ -22,11 +32,7 @@ Or you can call initial and await for it later:
 
 ``` dart
 // Initialize
-remoteHelper.initial(
-    fetchTimeout: const Duration(minutes: 1), // Optinal: default is 1 minute
-    minimumFetchInterval: const Duration(minutes: 60), // Optinal: default is 60 minutes
-    defaultParameters: {}, // Optinal: default is not set
-);
+remoteHelper.initial();
 
 // And wait for the initial later
 await remoteHelper.ensureInitialized;
@@ -53,11 +59,15 @@ remoteHelper.getString('key');
 
 /// JSON as List: 
 /// Example value on firebase: ["something", "something other"]
-remoteHelper.getList('key');
+///
+/// Only support bool, num, String as return type of list
+remoteHelper.getList<String>('key');
 
 /// JSON as Map:
-/// Example value on firebase: {"someKey":"someValue", "someKey other":"someValue other"}
-remoteHelper.getMap('key');
+/// Example value on firebase: {"someKey": 1, "someKey other": 2}
+///
+/// Only support bool, num, String as return type of map's values
+remoteHelper.getMap<int>('key');
 ```
 
 Get value as `RemoteConfigValue`:

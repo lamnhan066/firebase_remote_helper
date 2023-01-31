@@ -2,20 +2,27 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
 
 extension RemoteMap on RemoteConfigValue {
   /// Get value as Map
   ///
-  /// Result: Map<String, T> with T is bool, number, string
-  Map<String, T> asMap<T>() {
-    final json = jsonDecode(asString());
-
-    FirebaseRemoteHelper._printDebug('asMap json: $json');
-
+  /// This method will try to cast to your return type
+  /// If errors occur, this method will return [onError] if it's not null or
+  /// throw an errors if [onError] is null.
+  ///
+  /// If you met [ArgumentError] then you're using unsupported return types
+  Map<String, T> asMap<T>({Map<String, T>? onError}) {
     try {
-      if (json != null) return Map<String, T>.from(json);
+      final json = jsonDecode(asString()) as Map<String, dynamic>?;
+      FirebaseRemoteHelper._printDebug('asMap json: $json');
+
+      if (json != null) {
+        return json.cast<String, T>();
+      }
     } catch (e) {
       FirebaseRemoteHelper._printDebug('asMap ERROR: $e');
+      if (onError != null) return onError;
       rethrow;
     }
 
@@ -25,14 +32,22 @@ extension RemoteMap on RemoteConfigValue {
   /// Get value as List
   ///
   /// List<T> with T is bool, number, string
-  List<T> asList<T>() {
-    final json = jsonDecode(asString());
-    FirebaseRemoteHelper._printDebug('asList json: $json');
-
+  ///
+  /// If errors occur, this method will return [onError] if it's not null or
+  /// throw an errors if [onError] is null.
+  ///
+  /// If you met [ArgumentError] then you're using unsupported return types
+  List<T> asList<T>({List<T>? onError}) {
     try {
-      if (json != null) return List<T>.from(json);
+      final json = jsonDecode(asString()) as List<dynamic>?;
+      FirebaseRemoteHelper._printDebug('asList json: $json');
+
+      if (json != null) {
+        return json.cast<T>();
+      }
     } catch (e) {
       FirebaseRemoteHelper._printDebug('asList ERROR: $e');
+      if (onError != null) return onError;
       rethrow;
     }
 
@@ -41,6 +56,7 @@ extension RemoteMap on RemoteConfigValue {
 }
 
 class FirebaseRemoteHelper {
+  /// Get the instance of FirebaseRemoteHelper
   static final instance = FirebaseRemoteHelper._();
 
   static bool _debugLog = false;
@@ -57,9 +73,37 @@ class FirebaseRemoteHelper {
 
   /// Initialize the plugin
   Future<void> initial({
+    /// Timeout. Default is 1 minute
     Duration fetchTimeout = const Duration(minutes: 1),
+
+    /// Minimum fetch interval. Default is 60 minutes
     Duration minimumFetchInterval = const Duration(minutes: 60),
+
+    /// Default parameters. Supports ints, bools, Strings, Lists and Maps
+    ///
+    /// List is known as JSON with `[]` bracket on firebase remote config
+    /// Only support num, bool and String as return type of List
+    ///
+    /// Map is known as JSON with `{}` bracket on firebase remote config
+    /// Only support num, bool and String as return type of Map's values
+    ///
+    /// Throw [ArgumentError] if you're using unsupported type
+    ///
+    /// Ex:
+    /// {
+    ///    'bool': true,
+    ///    'int': 5,
+    ///    'String': 'This is string',
+    ///    'mapInt': {'a': 1, 'b': 2},
+    ///    'mapString': {'a': 'a', 'b': 'b'},
+    ///    'mapBool': {'a': true, 'b': false},
+    ///    'listInt': [1, 2, 3],
+    ///    'listString': ['a', 'b', 'c'],
+    ///    'listBool': [true, false, true],
+    /// }
     Map<String, dynamic>? defaultParameters,
+
+    /// Show debug log
     bool debugLog = false,
   }) async {
     try {
@@ -79,9 +123,10 @@ class FirebaseRemoteHelper {
       );
 
       if (defaultParameters != null) {
-        await remoteConfig.setDefaults(defaultParameters);
+        final formatedParameters = _formatParameters(defaultParameters);
+        await remoteConfig.setDefaults(formatedParameters);
 
-        _printDebug('Set default values: $defaultParameters');
+        _printDebug('Set default values: $formatedParameters');
       }
 
       final isActivated = await remoteConfig.fetchAndActivate();
@@ -92,6 +137,43 @@ class FirebaseRemoteHelper {
       _printDebug(
           '! Cannot connect to the firebase config server with error: $e');
     }
+  }
+
+  /// Only for testing
+  @visibleForTesting
+  static Map<String, dynamic> formatParameters(Map<String, dynamic> params) =>
+      _formatParameters(params);
+
+  /// Format parameters
+  static Map<String, dynamic> _formatParameters(Map<String, dynamic> params) {
+    return params.map((key, value) {
+      if (value is num || value is bool || value is String) {
+        return MapEntry(key, value);
+      }
+
+      if (value is Map<String, Object> || value is List<Object>) {
+        return MapEntry(key, jsonEncode(value));
+      }
+
+      if (value is Map) {
+        throw ArgumentError(
+            'Invalid value type "${value.runtimeType}" for key "$key". '
+            'Map must be a Map<String, Object>');
+      }
+
+      if (value is List) {
+        throw ArgumentError(
+          'Invalid value type "${value.runtimeType}" for key "$key". '
+          'List must be a List<Object>',
+        );
+      }
+
+      throw ArgumentError(
+        'Invalid value type "${value.runtimeType}" for key "$key". '
+        'Only booleans, numbers, strings, List<Object> and Map<String, Object> are supported as config values. '
+        "If you're trying to pass a json object – convert it to string beforehand",
+      );
+    });
   }
 
   /// Get value as RemoteConfigValue
