@@ -1,6 +1,6 @@
 name: firebase_remote_helper
 description: This plugin makes it easier for you to use firebase remote config.
-version: 0.1.1
+version: 0.2.0
 homepage: https://github.com/vursin/firebase_remote_helper
 
 environment:
@@ -8,10 +8,9 @@ environment:
   flutter: ">=2.5.0"
 
 dependencies:
-  firebase_remote_config: ^3.0.2
+  firebase_remote_config: ^4.0.0
   flutter:
     sdk: flutter
-
 
 dev_dependencies:
   flutter_test:

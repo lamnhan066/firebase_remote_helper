@@ -1,3 +1,7 @@
+## 0.2.0
+
+* Bump `firebase_remote_config` to `^4.0.0`.
+
 ## 0.1.1
 
 * Automatically using `jsonEncode` to encode `Map<String, Object>` and `List<Object>`.
