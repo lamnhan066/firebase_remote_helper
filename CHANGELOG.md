@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Bump sdk to ">=2.18.0 <4.0.0" and flutter to ">=3.3.0"
+
 ## 0.2.0
 
 * Bump `firebase_remote_config` to `^4.0.0`.
