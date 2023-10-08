@@ -5,13 +5,13 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 
 extension RemoteMap on RemoteConfigValue {
-  /// Get value as Map
+  /// Get value as Map.
   ///
   /// This method will try to cast to your return type
   /// If errors occur, this method will return [onError] if it's not null or
   /// throw an errors if [onError] is null.
   ///
-  /// If you met [ArgumentError] then you're using unsupported return types
+  /// If you met [ArgumentError] then you're using unsupported return types.
   Map<String, T> asMap<T>({Map<String, T>? onError}) {
     try {
       final json = jsonDecode(asString()) as Map<String, dynamic>?;
@@ -29,14 +29,14 @@ extension RemoteMap on RemoteConfigValue {
     return {};
   }
 
-  /// Get value as List
+  /// Get value as List.
   ///
-  /// List<T> with T is bool, number, string
+  /// List<T> with T is bool, number, string.
   ///
   /// If errors occur, this method will return [onError] if it's not null or
   /// throw an errors if [onError] is null.
   ///
-  /// If you met [ArgumentError] then you're using unsupported return types
+  /// If you met [ArgumentError] then you're using unsupported return types.
   List<T> asList<T>({List<T>? onError}) {
     try {
       final json = jsonDecode(asString()) as List<dynamic>?;
@@ -56,7 +56,7 @@ extension RemoteMap on RemoteConfigValue {
 }
 
 class FirebaseRemoteHelper {
-  /// Get the instance of FirebaseRemoteHelper
+  /// Get the instance of FirebaseRemoteHelper.
   static final instance = FirebaseRemoteHelper._();
 
   static bool _debugLog = false;
@@ -65,7 +65,7 @@ class FirebaseRemoteHelper {
 
   final _ensureInitializedCompleter = Completer<bool>();
 
-  /// Return when the plugin is initialized
+  /// Return when the plugin is initialized.
   ///
   /// Returns a [bool] that is true if the config parameters were activated.
   /// Returns a [bool] that is false if the config parameters were already activated.
@@ -73,21 +73,21 @@ class FirebaseRemoteHelper {
 
   /// Initialize the plugin
   Future<void> initial({
-    /// Timeout. Default is 1 minute
+    /// Timeout. Default is 1 minute.
     Duration fetchTimeout = const Duration(minutes: 1),
 
-    /// Minimum fetch interval. Default is 60 minutes
+    /// Minimum fetch interval. Default is 60 minutes.
     Duration minimumFetchInterval = const Duration(minutes: 60),
 
-    /// Default parameters. Supports ints, bools, Strings, Lists and Maps
+    /// Default parameters. Supports ints, bools, Strings, Lists and Maps.
     ///
     /// List is known as JSON with `[]` bracket on firebase remote config
-    /// Only support num, bool and String as return type of List
+    /// Only support num, bool and String as return type of List.
     ///
     /// Map is known as JSON with `{}` bracket on firebase remote config
-    /// Only support num, bool and String as return type of Map's values
+    /// Only support num, bool and String as return type of Map's values.
     ///
-    /// Throw [ArgumentError] if you're using unsupported type
+    /// Throw [ArgumentError] if you're using unsupported type.
     ///
     /// Ex:
     /// {
@@ -109,7 +109,7 @@ class FirebaseRemoteHelper {
     try {
       _debugLog = debugLog;
 
-      // Prevent initialize this plugin again
+      // Prevent initialize this plugin again.
       if (_ensureInitializedCompleter.isCompleted) return;
 
       await FirebaseRemoteConfig.instance.ensureInitialized();
@@ -139,12 +139,12 @@ class FirebaseRemoteHelper {
     }
   }
 
-  /// Only for testing
+  /// Only for testing.
   @visibleForTesting
   static Map<String, dynamic> formatParameters(Map<String, dynamic> params) =>
       _formatParameters(params);
 
-  /// Format parameters
+  /// Format parameters.
   static Map<String, dynamic> _formatParameters(Map<String, dynamic> params) {
     return params.map((key, value) {
       if (value is num || value is bool || value is String) {
@@ -176,31 +176,31 @@ class FirebaseRemoteHelper {
     });
   }
 
-  /// Get value as RemoteConfigValue
+  /// Get value as RemoteConfigValue.
   RemoteConfigValue get(String key) {
     return FirebaseRemoteConfig.instance.getValue(key);
   }
 
-  /// Get value as int
+  /// Get value as int.
   int getInt(String key) => get(key).asInt();
 
-  /// Get value as bool
+  /// Get value as bool.
   bool getBool(String key) => get(key).asBool();
 
-  /// Get value as String
+  /// Get value as String.
   String getString(String key) => get(key).asString();
 
-  /// Get value as double
+  /// Get value as double.
   double getDouble(String key) => get(key).asDouble();
 
-  /// Get value as Map
+  /// Get value as Map.
   ///
-  /// Result: Map<String, T> with T is bool, number, string
+  /// Result: Map<String, T> with T is bool, number, string.
   Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
 
-  /// Get value as List
+  /// Get value as List.
   ///
-  /// List<T> with T is bool, number, string
+  /// List<T> with T is bool, number, string.
   List<T> getList<T>(String key) => get(key).asList<T>();
 
   static void _printDebug(Object? object) {

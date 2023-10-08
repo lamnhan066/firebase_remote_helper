@@ -1,3 +1,8 @@
+## 0.3.1
+
+* Update comments.
+* Update homepage URL.
+
 ## 0.3.0
 
 * Bump sdk to ">=2.18.0 <4.0.0" and flutter to ">=3.3.0"
