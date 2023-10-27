@@ -12,8 +12,8 @@ final remoteHelper = FirebaseRemoteHelper.instance;
 
 // Initialize
 await remoteHelper.initial(
-    fetchTimeout: const Duration(minutes: 1), // Optinal: default is 1 minute
-    minimumFetchInterval: const Duration(minutes: 60), // Optinal: default is 60 minutes
+    fetchTimeout: const Duration(minutes: 1), // Optional: default is 1 minute
+    minimumFetchInterval: const Duration(minutes: 60), // Optional: default is 60 minutes
     defaultParameters: {
         'bool': true,
         'int': 5,
@@ -24,7 +24,7 @@ await remoteHelper.initial(
         'listInt': [1, 2, 3],
         'listString': ['a', 'b', 'c'],
         'listBool': [true, false, true],
-    }, // Optinal: default is not set
+    }, // Optional: default is not set
 );
 ```
 
@@ -37,6 +37,8 @@ remoteHelper.initial();
 // And wait for the initial later
 await remoteHelper.ensureInitialized;
 ```
+
+**NOTE:** You should provide default values for all used parameters to avoid issues.
 
 Get value as specific `type`:
 

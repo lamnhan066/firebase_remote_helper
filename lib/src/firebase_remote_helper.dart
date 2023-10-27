@@ -129,7 +129,12 @@ class FirebaseRemoteHelper {
         _printDebug('Set default values: $formatedParameters');
       }
 
-      final isActivated = await remoteConfig.fetchAndActivate();
+      await remoteConfig.fetch().timeout(fetchTimeout, onTimeout: () {
+        _printDebug('Timeout is exceeded, run `fetch` again in background`');
+        remoteConfig.fetchAndActivate();
+      });
+
+      final isActivated = await remoteConfig.activate();
 
       _ensureInitializedCompleter.complete(isActivated);
       _printDebug('Initialized');

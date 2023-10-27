@@ -1,3 +1,8 @@
+## 0.3.2
+
+* Improve the fetch and activate behavior.
+* Update dependencies.
+
 ## 0.3.1
 
 * Update comments.
