@@ -1,3 +1,8 @@
+## 0.4.0
+
+* Update depencencies.
+* **Breadking change** In `.asList`, `.asMap`, `getList` and `getMap`, an empty value will be returned if there is error occurs. If `onError` is null, an exception will be thrown.
+
 ## 0.3.2
 
 * Improve the fetch and activate behavior.

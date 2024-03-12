@@ -12,7 +12,7 @@ final remoteHelper = FirebaseRemoteHelper.instance;
 
 // Initialize
 await remoteHelper.initial(
-    fetchTimeout: const Duration(minutes: 1), // Optional: default is 1 minute
+    fetchTimeout: const Duration(seconds: 3), // Optional: default is 1 minute
     minimumFetchInterval: const Duration(minutes: 60), // Optional: default is 60 minutes
     defaultParameters: {
         'bool': true,
