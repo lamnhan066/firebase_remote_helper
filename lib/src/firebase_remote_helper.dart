@@ -7,12 +7,11 @@ import 'package:flutter/foundation.dart';
 extension RemoteMap on RemoteConfigValue {
   /// Get value as Map.
   ///
-  /// This method will try to cast to your return type
-  /// If errors occur, this method will return [onError] if it's not null or
-  /// throw an errors if [onError] is null.
+  /// This method will try to cast to your return type.
+  /// If error occurs, [onError] is returned. If [onError] is null, an exception will be thrown.
   ///
   /// If you met [ArgumentError] then you're using unsupported return types.
-  Map<String, T> asMap<T>({Map<String, T>? onError}) {
+  Map<String, T> asMap<T>({Map<String, T>? onError = const {}}) {
     try {
       final json = jsonDecode(asString()) as Map<String, dynamic>?;
       FirebaseRemoteHelper._printDebug('asMap json: $json');
@@ -22,22 +21,20 @@ extension RemoteMap on RemoteConfigValue {
       }
     } catch (e) {
       FirebaseRemoteHelper._printDebug('asMap ERROR: $e');
-      if (onError != null) return onError;
-      rethrow;
+      if (onError == null) rethrow;
     }
 
-    return {};
+    return onError ?? {};
   }
 
   /// Get value as List.
   ///
   /// List<T> with T is bool, number, string.
   ///
-  /// If errors occur, this method will return [onError] if it's not null or
-  /// throw an errors if [onError] is null.
+  /// If error occurs, [onError] is returned. If [onError] is null, an exception will be thrown.
   ///
   /// If you met [ArgumentError] then you're using unsupported return types.
-  List<T> asList<T>({List<T>? onError}) {
+  List<T> asList<T>({List<T>? onError = const []}) {
     try {
       final json = jsonDecode(asString()) as List<dynamic>?;
       FirebaseRemoteHelper._printDebug('asList json: $json');
@@ -47,11 +44,10 @@ extension RemoteMap on RemoteConfigValue {
       }
     } catch (e) {
       FirebaseRemoteHelper._printDebug('asList ERROR: $e');
-      if (onError != null) return onError;
-      rethrow;
+      if (onError == null) rethrow;
     }
 
-    return [];
+    return onError ?? [];
   }
 }
 
@@ -200,13 +196,23 @@ class FirebaseRemoteHelper {
 
   /// Get value as Map.
   ///
-  /// Result: Map<String, T> with T is bool, number, string.
-  Map<String, T> getMap<T>(String key) => get(key).asMap<T>();
+  /// Result: Map<String, T> with T is bool, number, string. If error occurs, [onError] is returned.
+  /// If [onError] is null, an exception will be thrown.
+  Map<String, T> getMap<T>(
+    String key, {
+    Map<String, T>? onError = const {},
+  }) =>
+      get(key).asMap<T>(onError: onError);
 
   /// Get value as List.
   ///
-  /// List<T> with T is bool, number, string.
-  List<T> getList<T>(String key) => get(key).asList<T>();
+  /// List<T> with T is bool, number, string. If error occurs, [onError] is returned.
+  /// If [onError] is null, an exception will be thrown.
+  List<T> getList<T>(
+    String key, {
+    List<T>? onError = const [],
+  }) =>
+      get(key).asList<T>(onError: onError);
 
   static void _printDebug(Object? object) {
     // ignore: avoid_print
