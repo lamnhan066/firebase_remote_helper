@@ -1,3 +1,8 @@
+## 0.5.0
+
+* Bump dart min sdk to 3.2.0.
+* Bump firebase_remote_config to 5.0.3.
+
 ## 0.4.0
 
 * Update depencencies.
