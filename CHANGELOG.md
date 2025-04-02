@@ -1,3 +1,8 @@
+## 0.6.0
+
+* **BREADKING CHANGE** `ensureInitialized` now return `void` instead of `bool`.
+* Use `fetchAndDecode` to make it more reliable.
+
 ## 0.5.0
 
 * Bump dart min sdk to 3.2.0.
