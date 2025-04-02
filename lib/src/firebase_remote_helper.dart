@@ -59,13 +59,23 @@ class FirebaseRemoteHelper {
 
   FirebaseRemoteHelper._();
 
-  final _ensureInitializedCompleter = Completer<bool>();
+  final _ensureInitializedCompleter = Completer<void>();
 
   /// Return when the plugin is initialized.
   ///
   /// Returns a [bool] that is true if the config parameters were activated.
   /// Returns a [bool] that is false if the config parameters were already activated.
-  Future<bool> get ensureInitialized => _ensureInitializedCompleter.future;
+  Future<void> get ensureInitialized => _ensureInitializedCompleter.future;
+
+  /// Return when the config is updated.
+  Stream<FirebaseRemoteHelper> get onConfigUpdated =>
+      _configUpdatedController.stream;
+
+  final _configUpdatedController =
+      StreamController<FirebaseRemoteHelper>.broadcast();
+  StreamSubscription<RemoteConfigUpdate>? _configUpdatedSubscription;
+
+  bool _isStarted = false;
 
   /// Initialize the plugin
   Future<void> initial({
@@ -102,20 +112,22 @@ class FirebaseRemoteHelper {
     /// Show debug log
     bool debugLog = false,
   }) async {
+    if (_isStarted) return;
+    _isStarted = true;
+
     try {
       _debugLog = debugLog;
 
       // Prevent initialize this plugin again.
       if (_ensureInitializedCompleter.isCompleted) return;
 
-      await FirebaseRemoteConfig.instance.ensureInitialized();
-
       final remoteConfig = FirebaseRemoteConfig.instance;
 
       await remoteConfig.setConfigSettings(
         RemoteConfigSettings(
-            fetchTimeout: fetchTimeout,
-            minimumFetchInterval: minimumFetchInterval),
+          fetchTimeout: fetchTimeout,
+          minimumFetchInterval: minimumFetchInterval,
+        ),
       );
 
       if (defaultParameters != null) {
@@ -125,19 +137,30 @@ class FirebaseRemoteHelper {
         _printDebug('Set default values: $formatedParameters');
       }
 
-      await remoteConfig.fetch().timeout(fetchTimeout, onTimeout: () {
-        _printDebug('Timeout is exceeded, run `fetch` again in background`');
-        remoteConfig.fetchAndActivate();
+      await remoteConfig.fetchAndActivate();
+
+      _configUpdatedSubscription =
+          remoteConfig.onConfigUpdated.listen((event) async {
+        await remoteConfig.activate();
+        _configUpdatedController.add(this);
       });
 
-      final isActivated = await remoteConfig.activate();
-
-      _ensureInitializedCompleter.complete(isActivated);
-      _printDebug('Initialized');
+      await remoteConfig.ensureInitialized();
     } catch (e) {
       _printDebug(
           '! Cannot connect to the firebase config server with error: $e');
+    } finally {
+      if (!_ensureInitializedCompleter.isCompleted) {
+        _ensureInitializedCompleter.complete();
+        _printDebug('Initialized');
+      }
     }
+  }
+
+  /// Dispose the plugin
+  void dispose() {
+    _configUpdatedSubscription?.cancel();
+    _configUpdatedController.close();
   }
 
   /// Only for testing.
